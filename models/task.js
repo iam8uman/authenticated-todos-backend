@@ -1,4 +1,4 @@
-import { Schema } from "mongoose";
+import { Schema, model } from 'mongoose';
 
 const taskSchema = new Schema({
     name: {
@@ -10,20 +10,19 @@ const taskSchema = new Schema({
         required: true,
     },
     isCompleted: {
-        type: String,
+        type: Boolean,
         required: false,
     },
     user: {
         type: Schema.Types.ObjectId,
         ref: 'User',
-        required:
-        true,
+        required: true,
     },
-    
-    createdAt: {
+    createdAt: { 
         type: Date,
         default: Date.now,
     },
-    });
+});
 
-export default taskSchema;
+const Task = model('Task', taskSchema);
+export default Task;
