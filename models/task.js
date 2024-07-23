@@ -9,10 +9,17 @@ const taskSchema = new Schema({
         type: String,
         required: true,
     },
-    status: {
+    isCompleted: {
         type: String,
-        required: true,
+        required: false,
     },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required:
+        true,
+    },
+    
     createdAt: {
         type: Date,
         default: Date.now,
