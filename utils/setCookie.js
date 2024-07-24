@@ -10,9 +10,9 @@ const setCookie = (newUser, res,statusCode, msg) => {
   res.cookie("token", token, { httpOnly: true });
 
   // Send the response
-  res.status(201).json({
+  res.status(statusCode).json({
     success: true,
-    message: "User created successfully",
+    message: msg,
     user: newUser,
   });
 };

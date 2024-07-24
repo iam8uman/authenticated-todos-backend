@@ -20,7 +20,7 @@ const createUser = async (req, res) => {
 
       await newUser.save();
 
-      setCookie(newUser, res, 201, "User created successfully"); 
+      setCookie(newUser, res, 201, "User created successfully");
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -94,20 +94,31 @@ const updateUserById = async (req, res) => {
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
-    const user= await User.findOne({ email });
+    const user = await User.findOne({ email }).select("+password");
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return res.status(404).json({ error: "Invalid Credencials" });
     }
     const isMatch = await bcrypt.compare(password, user.password);
+
     if (!isMatch) {
       return res.status(400).json({ error: "Invalid Password" });
     }
-    setCookie(user, res, 200, "User logged in successfully");
-  }
-  catch (error) {
+    setCookie(user, res, 200, `${user.name} logged in successfully`);
+  } catch (error) {
     res.status(500).json({ error: error.message });
   }
-}
+};
+const logOut = async (req, res) => {
+  res.clearCookie("token");
+  res.status(200).json({ message: "Logged out successfullyy" });
+};
+
+const getMe = (req, res) => {
+  res.status(200).json({
+    success: true,
+    user: req.user,
+  });
+};
 
 export {
   createUser,
@@ -115,7 +126,7 @@ export {
   deleteSingleUser,
   getUserById,
   updateUserById,
-  loginUser
+  loginUser,
+  logOut,
+  getMe,
 };
-
-

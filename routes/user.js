@@ -1,13 +1,16 @@
 import express from 'express';
-import { getAllUsers, createUser, getUserById, deleteSingleUser, updateUserById, loginUser } from '../controllers/user.js';
+import { getAllUsers, createUser, getUserById, deleteSingleUser, updateUserById, loginUser, logOut, getMe } from '../controllers/user.js';
+import { isAuthenticated } from '../middlewares/auth.js';
 
 const router = express.Router();
 
 router.get('/all', getAllUsers);
-router.post('/create', createUser);
-router.get('/:id',getUserById);
-router.delete('/:id',deleteSingleUser);
-router.patch('/:id',updateUserById);
-router.post('/login',loginUser);
+router.get('/me',isAuthenticated, getMe); // Define this before '/:id'
+router.get('/:id', getUserById);
+router.delete('/:id', deleteSingleUser);
+router.patch('/:id', updateUserById);
+router.post('/register', createUser);
+router.post('/login', loginUser);
+router.post('/logout', logOut);
 
 export default router;
