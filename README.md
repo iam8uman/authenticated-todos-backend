@@ -20,3 +20,25 @@ These instructions will get you a copy of the project up and running on your loc
 ### Installation
 
 1. Clone the repository:
+``` git clone https://github.com/yourusername/your-repo-name.git ```
+
+```cd express-backend npm install```
+
+```npm run dev```
+
+
+Now, open your browser and navigate to `http://localhost:3000` to see the application running.
+
+## Built With
+
+- [Next.js](https://nextjs.org/) - The React framework used for the frontend
+- [Express.js](https://expressjs.com/) - The Node.js framework used for the backend
+- [MongoDB](https://www.mongodb.com/) - The database used
+
+## Contributing
+
+Please read [CONTRIBUTING.md](https://gist.github.com/yourusername/your-repo-name/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
