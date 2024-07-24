@@ -1,15 +1,17 @@
-import Task from '../models/task.js';
+import Task from "../models/task.js";
 
 const createTask = async (req, res) => {
-  const { name, description, isCompleted, user } = req.body;
+  const { name, description } = req.body;
   try {
     const task = await Task.create({
       name,
       description,
-      isCompleted,
-      user,
+      user: req.user,
     });
-    res.status(201).json(task);
+    res.status(201).json({
+      success: true,
+      message: "Task created successfully",
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -18,25 +20,35 @@ const createTask = async (req, res) => {
 const getAllTasks = async (req, res) => {
   try {
     const tasks = await Task.find();
-    res.status(200).json(tasks);
+    res.status(200).json({
+      success: true,
+      count: tasks.length,
+      tasks,
+    });
   } catch (error) {
-    res.status(404).json({ error: error.message });
+    res.status(404).json({ success: false, error: error.message });
   }
 };
 
 const deleteSingleTask = async (req, res) => {
   try {
     const task = await Task.findByIdAndDelete(req.params.id);
-    res.status(200).json(task);
+    res.status(200).json({
+      success: true,
+      message: "Task deleted successfully",
+    });
   } catch (error) {
-    res.status(404).json({ error: error.message });
+    res.status(404).json({ success: false, error: error.message });
   }
 };
 
 const getTaskById = async (req, res) => {
   try {
     const task = await Task.findById(req.params.id);
-    res.status(200).json(task);
+    res.status(200).json({
+      success: true,
+      task,
+    });
   } catch (error) {
     res.status(404).json({ error: error.message });
   }
@@ -47,7 +59,10 @@ const updateTaskById = async (req, res) => {
     const task = await Task.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
-    res.status(200).json(task);
+    res.status(200).json({
+      success: true,
+      task,
+    });
   } catch (error) {
     res.status(404).json({ error: error.message });
   }
