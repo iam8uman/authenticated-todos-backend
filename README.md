@@ -192,7 +192,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## UseFul code snippet
 
 ````"start": "NODE_ENV=Production node index.js",
-    "dev": "NODE_ENV=Development nodemon index.js"```
+    "dev": "NODE_ENV=Development nodemon index.js"
 ````
 
 
