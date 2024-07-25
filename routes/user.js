@@ -9,7 +9,7 @@ router.get('/me',isAuthenticated, getMe); // Define this before '/:id'
 router.get('/:id', getUserById);
 router.delete('/:id', deleteSingleUser);
 router.patch('/:id', updateUserById);
-router.post('/register', createUser);
+router.post('/create', createUser);
 router.post('/login', loginUser);
 router.post('/logout', logOut);
 

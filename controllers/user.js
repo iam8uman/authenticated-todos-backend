@@ -2,8 +2,9 @@ import User from "../models/user.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import setCookie from "../utils/setCookie.js";
+import CustomError from "../middlewares/error.js";
 
-const createUser = async (req, res) => {
+const createUser = async (req, res, next) => {
   const { name, email, password } = req.body;
   try {
     const user = await User.findOne({ email });
@@ -23,27 +24,27 @@ const createUser = async (req, res) => {
       setCookie(newUser, res, 201, "User created successfully");
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
-const getAllUsers = async (req, res) => {
+const getAllUsers = async (req, res, next) => {
   try {
     const users = await User.find();
     res.status(200).json(users);
   } catch (error) {
-    res.status(404).json({ error: error.message });
+    next(error);
   }
 };
 
-const deleteSingleUser = async (req, res) => {
+const deleteSingleUser = async (req, res, next) => {
   try {
     // Get the token from the cookies
     const token = req.cookies.token;
 
     // If there's no token, return an error
     if (!token) {
-      return res.status(403).json({ error: "Not authenticated" });
+      return next(new CustomError("Token Not Found", 400));
     }
 
     // Verify the token
@@ -54,7 +55,7 @@ const deleteSingleUser = async (req, res) => {
 
     // If the user doesn't exist or has already been deleted, return an error
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return next(new CustomError("User Not Found", 400));
     }
 
     // If everything is okay, return the success message
@@ -69,47 +70,51 @@ const deleteSingleUser = async (req, res) => {
     }
 
     // For other errors, return a 500 status code
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
-const getUserById = async (req, res) => {
+const getUserById = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id);
     res.status(200).json(user);
   } catch (error) {
-    res.status(404).json({ error: error.message });
+    next(error);
   }
 };
 
-const updateUserById = async (req, res) => {
+const updateUserById = async (req, res, next) => {
   try {
     const user = await User.findByIdAndUpdate(params.id, req, { new: true });
     res.status(200).json(user);
   } catch (error) {
-    res.status(404).json({ error: error.message });
+    next(error);
   }
 };
 
-const loginUser = async (req, res) => {
+const loginUser = async (req, res, next) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email }).select("+password");
     if (!user) {
-      return res.status(404).json({ error: "Invalid Credencials" });
+      return next(new CustomError("Invalid Email", 400));
     }
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return res.status(400).json({ error: "Invalid Password" });
+      return next(new CustomError("Invalid Password", 400));
     }
     setCookie(user, res, 200, `${user.name} logged in successfully`);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
-const logOut = async (req, res) => {
-  res.clearCookie("token");
+const logOut = async (req, res, next) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "development" ? false : true,
+    sameSite: process.env.NODE_ENV === "development" ? "lax" : "none",
+  });
   res.status(200).json({ message: "Logged out successfullyy" });
 };
 
@@ -119,7 +124,6 @@ const getMe = (req, res) => {
     user: req.user,
   });
 };
-
 
 export {
   createUser,

@@ -1,6 +1,7 @@
+import CustomError from "../middlewares/error.js";
 import Task from "../models/task.js";
 
-const createTask = async (req, res) => {
+const createTask = async (req, res, next) => {
   const { name, description } = req.body;
   try {
     const task = await Task.create({
@@ -13,11 +14,11 @@ const createTask = async (req, res) => {
       message: "Task created successfully",
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
-const getAllTasks = async (req, res) => {
+const getAllTasks = async (req, res, next) => {
   try {
     const tasks = await Task.find();
     res.status(200).json({
@@ -26,11 +27,11 @@ const getAllTasks = async (req, res) => {
       tasks,
     });
   } catch (error) {
-    res.status(404).json({ success: false, error: error.message });
+    next(error);
   }
 };
 
-const deleteSingleTask = async (req, res) => {
+const deleteSingleTask = async (req, res, next) => {
   const user = req.user;
   try {
     await Task.findByIdAndDelete(req.params.id);
@@ -39,11 +40,11 @@ const deleteSingleTask = async (req, res) => {
       message: `Task deleted successfully BY: ${user.name}`,
     });
   } catch (error) {
-    res.status(404).json({ success: false, error: error.message });
+    next(error);
   }
 };
 
-const getTaskById = async (req, res) => {
+const getTaskById = async (req, res, next) => {
   try {
     const task = await Task.findById(req.params.id);
     res.status(200).json({
@@ -51,11 +52,11 @@ const getTaskById = async (req, res) => {
       task,
     });
   } catch (error) {
-    res.status(404).json({ error: error.message });
+    next(error);
   }
 };
 
-const updateTaskById = async (req, res) => {
+const updateTaskById = async (req, res, next) => {
   try {
     const task = await Task.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -65,11 +66,11 @@ const updateTaskById = async (req, res) => {
       task,
     });
   } catch (error) {
-    res.status(404).json({ error: error.message });
+    next(error);
   }
 };
 
-const getMyTask = async (req, res) => {
+const getMyTask = async (req, res, next) => {
   const userId = req.user.id;
   console.log(userId);
   try {
@@ -80,16 +81,16 @@ const getMyTask = async (req, res) => {
       tasks,
     });
   } catch (error) {
-    res.status(404).json({ success: false, error: error.message });
+    next(error);
   }
 };
 
-const markAsCompleted = async (req, res) => {
+const markAsCompleted = async (req, res, next) => {
   const taskId = req.params.id;
   try {
     const task = await Task.findById(taskId);
     if (!task) {
-      return res.status(404).json({ error: "Task not found" });
+      return next(new CustomError("Task not found", 400));
     }
     task.isCompleted = !task.isCompleted;
     await task.save();
@@ -98,7 +99,7 @@ const markAsCompleted = async (req, res) => {
       message: `Task updated successfully to ${!task.isCompleted} `,
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 

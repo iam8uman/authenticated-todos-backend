@@ -20,12 +20,11 @@ These instructions will get you a copy of the project up and running on your loc
 ### Installation
 
 1. Clone the repository:
-``` git clone https://github.com/yourusername/your-repo-name.git ```
+   `git clone https://github.com/yourusername/your-repo-name.git`
 
-```cd express-backend npm install```
+`cd express-backend npm install`
 
-```npm run dev```
-
+`npm run dev`
 
 Now, open your browser and navigate to `http://localhost:3000` to see the application running.
 
@@ -42,3 +41,9 @@ Please read [CONTRIBUTING.md](https://gist.github.com/yourusername/your-repo-nam
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
+## UseFul code snippet
+
+````"start": "NODE_ENV=Production node index.js",
+    "dev": "NODE_ENV=Development nodemon index.js"```
+````
