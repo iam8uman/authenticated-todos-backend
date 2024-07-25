@@ -5,6 +5,7 @@ import {
   getAllTasks,
   getMyTask,
   getTaskById,
+  markAsCompleted,
   updateTaskById,
 } from "../controllers/task.js";
 import { isAuthenticated } from "../middlewares/auth.js";
@@ -15,7 +16,8 @@ router.get("/all", getAllTasks);
 router.post("/create", isAuthenticated, createTask);
 router.get("/mytask", isAuthenticated, getMyTask);
 router.delete("/:id", isAuthenticated, deleteSingleTask);
+router.put("/complete/:id", isAuthenticated, markAsCompleted);
+router.put("/:id", isAuthenticated, updateTaskById);
 router.get("/:id", getTaskById);
-router.put("/:id", updateTaskById);
 
 export default router;
