@@ -1,46 +1,193 @@
-# Next.js & Express.js Todo Application
+Here's the `README.md` content in Markdown format for your project. You can copy and paste this into a `README.md` file:
 
-This is a Todo application built using Next.js and Express.js. Next.js is used for the frontend to create an interactive user interface, and Express.js is used for the backend to handle API requests and interact with the database.
+```markdown
+# Task Management API
 
-## Features
+This is a RESTful API for managing users and tasks. It is built with Express.js and provides various endpoints for user and task management.
 
-- User authentication
-- Create, read, update, and delete (CRUD) operations for todos
-- Real-time updates without page refresh
+## Table of Contents
+1. [Setup](#setup)
+2. [Environment Variables](#environment-variables)
+3. [API Endpoints](#api-endpoints)
+   - [User Endpoints](#user-endpoints)
+   - [Task Endpoints](#task-endpoints)
+4. [Error Handling](#error-handling)
+5. [Middleware](#middleware)
+6. [License](#license)
 
-## Getting Started
+## Setup
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+1. **Clone the repository:**
+   ```bash
+   git clone <repository-url>
+   cd <repository-directory>
+   ```
 
-### Prerequisites
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-- Node.js
-- npm
+3. **Set up environment variables:** (See [Environment Variables](#environment-variables))
 
-### Installation
+4. **Start the server:**
+   ```bash
+   npm start
+   ```
 
-1. Clone the repository:
-   `git clone https://github.com/yourusername/your-repo-name.git`
+## Environment Variables
 
-`cd express-backend npm install`
+Create a `.env` file in the root directory with the following environment variables:
 
-`npm run dev`
+- `PORT`: The port number on which the server runs.
+- `FRONTEND_URL`: The URL of the frontend application for CORS configuration.
 
-Now, open your browser and navigate to `http://localhost:3000` to see the application running.
+Example:
+```
+PORT=5000
+FRONTEND_URL=http://localhost:3000
+```
 
-## Built With
+## API Endpoints
 
-- [Next.js](https://nextjs.org/) - The React framework used for the frontend
-- [Express.js](https://expressjs.com/) - The Node.js framework used for the backend
-- [MongoDB](https://www.mongodb.com/) - The database used
+### User Endpoints
 
-## Contributing
+- **Get All Users**
+  - **URL:** `/user/all`
+  - **Method:** `GET`
+  - **Description:** Retrieve a list of all users.
+  - **Response:** JSON array of users.
 
-Please read [CONTRIBUTING.md](https://gist.github.com/yourusername/your-repo-name/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
+- **Get Current User**
+  - **URL:** `/user/me`
+  - **Method:** `GET`
+  - **Description:** Retrieve the current authenticated user's information.
+  - **Middleware:** `isAuthenticated`
+  - **Response:** JSON object of the user's details.
+
+- **Get User by ID**
+  - **URL:** `/user/:id`
+  - **Method:** `GET`
+  - **Description:** Retrieve user information by user ID.
+  - **Parameters:** `id` (String) - User ID
+  - **Response:** JSON object of the user's details.
+
+- **Create User**
+  - **URL:** `/user/create`
+  - **Method:** `POST`
+  - **Description:** Create a new user.
+  - **Body Parameters:** 
+    - `name` (String) - User's name
+    - `email` (String) - User's email
+    - `password` (String) - User's password
+  - **Response:** JSON object of the created user.
+
+- **Login User**
+  - **URL:** `/user/login`
+  - **Method:** `POST`
+  - **Description:** Login a user.
+  - **Body Parameters:** 
+    - `email` (String) - User's email
+    - `password` (String) - User's password
+  - **Response:** JSON object containing authentication token.
+
+- **Logout User**
+  - **URL:** `/user/logout`
+  - **Method:** `POST`
+  - **Description:** Logout the current user.
+  - **Response:** JSON message confirming logout.
+
+- **Delete User**
+  - **URL:** `/user/:id`
+  - **Method:** `DELETE`
+  - **Description:** Delete a user by ID.
+  - **Parameters:** `id` (String) - User ID
+  - **Response:** JSON message confirming deletion.
+
+- **Update User**
+  - **URL:** `/user/:id`
+  - **Method:** `PATCH`
+  - **Description:** Update user details by ID.
+  - **Parameters:** `id` (String) - User ID
+  - **Body Parameters:** 
+    - `name` (String) - (Optional) New name
+    - `email` (String) - (Optional) New email
+  - **Response:** JSON object of the updated user.
+
+### Task Endpoints
+
+- **Get All Tasks**
+  - **URL:** `/task/all`
+  - **Method:** `GET`
+  - **Description:** Retrieve a list of all tasks.
+  - **Response:** JSON array of tasks.
+
+- **Create Task**
+  - **URL:** `/task/create`
+  - **Method:** `POST`
+  - **Description:** Create a new task.
+  - **Middleware:** `isAuthenticated`
+  - **Body Parameters:** 
+    - `title` (String) - Task title
+    - `description` (String) - Task description
+    - `dueDate` (Date) - Due date of the task
+  - **Response:** JSON object of the created task.
+
+- **Get My Tasks**
+  - **URL:** `/task/mytask`
+  - **Method:** `GET`
+  - **Description:** Retrieve tasks associated with the authenticated user.
+  - **Middleware:** `isAuthenticated`
+  - **Response:** JSON array of user's tasks.
+
+- **Get Task by ID**
+  - **URL:** `/task/:id`
+  - **Method:** `GET`
+  - **Description:** Retrieve task details by task ID.
+  - **Parameters:** `id` (String) - Task ID
+  - **Response:** JSON object of the task details.
+
+- **Update Task**
+  - **URL:** `/task/:id`
+  - **Method:** `PUT`
+  - **Description:** Update task details by ID.
+  - **Middleware:** `isAuthenticated`
+  - **Parameters:** `id` (String) - Task ID
+  - **Body Parameters:** 
+    - `title` (String) - (Optional) New title
+    - `description` (String) - (Optional) New description
+    - `dueDate` (Date) - (Optional) New due date
+  - **Response:** JSON object of the updated task.
+
+- **Mark Task as Completed**
+  - **URL:** `/task/complete/:id`
+  - **Method:** `PUT`
+  - **Description:** Mark a task as completed.
+  - **Middleware:** `isAuthenticated`
+  - **Parameters:** `id` (String) - Task ID
+  - **Response:** JSON object of the updated task.
+
+- **Delete Task**
+  - **URL:** `/task/:id`
+  - **Method:** `DELETE`
+  - **Description:** Delete a task by ID.
+  - **Middleware:** `isAuthenticated`
+  - **Parameters:** `id` (String) - Task ID
+  - **Response:** JSON message confirming deletion.
+
+## Error Handling
+
+The API uses a custom error handling middleware to handle errors consistently. Errors are returned with a JSON response containing a message and an appropriate HTTP status code.
+
+## Middleware
+
+- **isAuthenticated:** This middleware checks if the user is authenticated before allowing access to certain routes.
+
+- **errorMiddleware:** This middleware handles errors and sends a consistent JSON response.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## UseFul code snippet
 
