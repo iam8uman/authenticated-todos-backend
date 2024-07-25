@@ -47,3 +47,8 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 ````"start": "NODE_ENV=Production node index.js",
     "dev": "NODE_ENV=Development nodemon index.js"```
 ````
+
+
+## API URL 
+ This is the API URL for authenticated todos with token, cookies and all!
+ ```https://authenticated-todos-backend.onrender.com```
